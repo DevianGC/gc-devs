@@ -70,7 +70,7 @@ export default function DashboardLayout({ children, userType = 'student' }) {
       >
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>
-            {userType === 'career-office' ? 'Career Office' : 'Student Portal'}
+            {userType === 'career-office' ? 'Career Office' : 'User Portal'}
           </h2>
           {!isMobile && (
             <button
