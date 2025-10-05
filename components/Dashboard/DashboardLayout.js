@@ -137,9 +137,7 @@ export default function DashboardLayout({ children, userType = 'student' }) {
             >
               ☰
             </button>
-            <h1 className={styles.pageTitle}>
-              GCCCS CareerLink
-            </h1>
+          
           </div>
           <div className={styles.headerRight}>
             <div className={styles.userInfo}>
