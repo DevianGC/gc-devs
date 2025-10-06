@@ -549,12 +549,6 @@ export default function CareerOfficeJobs() {
                       Edit
                     </button>
                     <button
-                      className={`btn ${styles.saveButton}`}
-                      onClick={() => handleSubmitJob({ isEdit: true })}
-                    >
-                      Save
-                    </button>
-                    <button
                       className={`btn ${styles.deleteJobButton}`}
                       onClick={() => handleDeleteJob(selectedJob)}
                     >
