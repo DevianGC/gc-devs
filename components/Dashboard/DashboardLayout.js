@@ -7,6 +7,8 @@ import { logout } from '../../utils/config';
 export default function DashboardLayout({ children, userType = 'student' }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userInitials, setUserInitials] = useState('');
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,6 +33,29 @@ export default function DashboardLayout({ children, userType = 'student' }) {
     }
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/me', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const u = data?.user;
+        if (!u || !isMounted) return;
+        const first = (u.firstName || '').toString().trim();
+        const last = (u.lastName || '').toString().trim();
+        const full = (u.fullName || `${first} ${last}`).trim();
+        const display = full || u.email || '';
+        setUserName(display);
+
+        const initials = (first[0] || '') + (last[0] || (first ? '' : (u.email || '?')[0] || ''));
+        setUserInitials((initials || '?').toUpperCase());
+      } catch {}
+    };
+    fetchUser();
+    return () => { isMounted = false; };
+  }, []);
+
   const handleNavClick = () => {
     if (isMobile) setIsSidebarOpen(false);
   };
@@ -52,7 +77,7 @@ export default function DashboardLayout({ children, userType = 'student' }) {
     : [
         { href: '/dashboard/career-office', label: 'Dashboard', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="2"/></svg> },
         { href: '/dashboard/career-office/jobs', label: 'Manage Jobs', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="7" y="3" width="6" height="4" rx="2" stroke="currentColor" strokeWidth="2"/></svg> },
-        { href: '/dashboard/career-office/students', label: 'Student Profiles', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="2"/><rect x="4" y="13" width="12" height="4" rx="2" stroke="currentColor" strokeWidth="2"/></svg> },
+        { href: '/dashboard/career-office/students', label: 'User Profiles', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="2"/><rect x="4" y="13" width="12" height="4" rx="2" stroke="currentColor" strokeWidth="2"/></svg> },
         { href: '/dashboard/career-office/events', label: 'Manage Events', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 9H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M7 13H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg> },
         { href: '/dashboard/career-office/reports', label: 'Reports', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 9H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg> },
       ];
@@ -141,8 +166,8 @@ export default function DashboardLayout({ children, userType = 'student' }) {
           </div>
           <div className={styles.headerRight}>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>John Ian</span>
-              <div className={styles.userAvatar}>J</div>
+              <span className={styles.userName}>{userName || ' '}</span>
+              <div className={styles.userAvatar}>{userInitials || ' '}</div>
             </div>
           </div>
         </header>
