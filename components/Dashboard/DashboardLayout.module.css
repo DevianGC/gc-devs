@@ -134,7 +134,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0rem 1rem;
+  padding: 1rem 1rem 0;
   background-color: white;
   border-bottom: 1px solid var(--gray-200);
   height: 1%;
@@ -258,10 +258,15 @@
 
   .mobileMenuButton {
     display: block;
+    padding-left: 1rem;
   }
 
   .dashboardHeader {
-    padding: 1rem;
+    padding: 1rem 1rem 0rem;
+  }
+
+  .headerRight {
+    padding-right: 1rem;
   }
 
   .sidebarHeader {
@@ -303,7 +308,7 @@
   .dashboardHeader {
     display: flex;
     padding: 0rem 2rem;
-    background-color: white;
+    background-color: rgb(249, 247, 247);
     border-bottom: 1px solid var(--gray-200);
     height: 1%;
     position: sticky;
