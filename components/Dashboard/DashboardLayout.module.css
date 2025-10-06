@@ -134,7 +134,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0rem 1rem;
   background-color: white;
   border-bottom: 1px solid var(--gray-200);
   height: 1%;
@@ -146,6 +146,7 @@
 .headerLeft {
   display: flex;
   align-items: center;
+  padding-bottom: 4.5rem;
 }
 
 .mobileMenuButton {
@@ -168,7 +169,7 @@
 .headerRight {
   display: flex;
   align-items: center;
-  padding-bottom: 3rem;
+  padding-bottom: 4.5rem;
 }
 
 .userInfo {
@@ -298,5 +299,14 @@
 
   .contentWrapper {
     padding: 1rem;
+  }
+  .dashboardHeader {
+    display: flex;
+    padding: 0rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid var(--gray-200);
+    height: 1%;
+    position: sticky;
+    top: 4rem; /* Below fixed navbar */
   }
 }
