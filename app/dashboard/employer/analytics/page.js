@@ -355,7 +355,7 @@ export default function EmployerAnalytics() {
               </div>
               <div className={styles.insightContent}>
                 <h4 className={styles.insightTitle}>Strong Application Growth</h4>
-                <p className={styles.insightText">Applications have increased by 8% this period, showing growing interest</p>
+                <p className={styles.insightText}>Applications have increased by 8% this period, showing growing interest</p>
               </div>
             </div>
           </div>
