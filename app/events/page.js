@@ -126,7 +126,7 @@ export default function EventsPage() {
         <div className="container">
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaTitle}>Want to host an event?</h2>
-            <Link href="/employer/register" className="btn btn-primary">
+            <Link href="/employer/register" className={`btn btn-primary ${styles.ctaButton}`}>
               Register as Employer
             </Link>
             <p className={styles.ctaText}>
