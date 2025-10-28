@@ -126,6 +126,9 @@ export default function EventsPage() {
         <div className="container">
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaTitle}>Want to host an event?</h2>
+            <Link href="/employer/register" className="btn btn-primary">
+              Register as Employer
+            </Link>
             <p className={styles.ctaText}>
               If you're an employer or organization interested in hosting an event with our career center, we'd love to hear from you.
             </p>
