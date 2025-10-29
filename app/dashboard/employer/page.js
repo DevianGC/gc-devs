@@ -5,13 +5,14 @@ import DashboardLayout from '@/components/Dashboard/DashboardLayout';
 import styles from './employer-dashboard.module.css';
 
 export default function EmployerDashboard() {
-  // Mock data for employer dashboard stats
   const [stats, setStats] = useState({
-    activeJobs: 8,
-    totalApplications: 156,
-    shortlistedCandidates: 23,
-    scheduledInterviews: 7
+    activeJobs: 0,
+    totalApplications: 0,
+    shortlistedCandidates: 0,
+    scheduledInterviews: 0
   });
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [recentApplications, setRecentApplications] = useState([
     {
@@ -48,32 +49,35 @@ export default function EmployerDashboard() {
     }
   ]);
 
-  const [activeJobPostings, setActiveJobPostings] = useState([
-    {
-      id: 1,
-      title: 'Software Engineer',
-      department: 'Engineering',
-      applicants: 45,
-      posted: '2023-10-10',
-      status: 'Active'
-    },
-    {
-      id: 2,
-      title: 'UX Designer',
-      department: 'Design',
-      applicants: 32,
-      posted: '2023-10-08',
-      status: 'Active'
-    },
-    {
-      id: 3,
-      title: 'Data Analyst',
-      department: 'Analytics',
-      applicants: 28,
-      posted: '2023-10-05',
-      status: 'Active'
+  // Fetch jobs from Firebase
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/jobs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch jobs');
+      }
+      const data = await response.json();
+      setJobs(data);
+      
+      // Update stats based on fetched jobs
+      const activeJobs = data.filter(job => job.status === 'Active');
+      setStats(prev => ({
+        ...prev,
+        activeJobs: activeJobs.length
+      }));
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  const activeJobPostings = jobs.filter(job => job.status === 'Active').slice(0, 3);
 
   const getStatusColor = (status) => {
     switch (status) {
