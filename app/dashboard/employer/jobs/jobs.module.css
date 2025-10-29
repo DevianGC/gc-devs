@@ -33,8 +33,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
+  padding: 0.75rem 1rem;
+  background: orange;
   color: white;
   border: none;
   border-radius: 8px;
@@ -45,7 +45,7 @@
 }
 
 .createButton:hover {
-  background: var(--primary-color-dark);
+  background: rgb(65, 65, 65);
   transform: translateY(-1px);
 }
 
@@ -265,6 +265,46 @@
   margin: 0;
 }
 
+/* Loading State */
+.loadingState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-500);
+}
+
+.loadingState p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Error State */
+.errorState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-700);
+}
+
+.errorState p {
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  color: #dc2626;
+}
+
+.retryButton {
+  padding: 0.5rem 1.5rem;
+  background: orange;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryButton:hover {
+  background: rgb(212, 138, 0);
+}
+
 /* Empty State */
 .emptyState {
   text-align: center;
@@ -385,6 +425,7 @@
   font-size: 0.875rem;
   transition: border-color 0.2s, box-shadow 0.2s;
   background: white;
+  color: black;
 }
 
 .formInput:focus,
@@ -426,7 +467,7 @@
 
 .submitButton {
   padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
+  background: orange;
   color: white;
   border: none;
   border-radius: 6px;
@@ -436,7 +477,7 @@
 }
 
 .submitButton:hover {
-  background: var(--primary-color-dark);
+  background: rgb(212, 138, 0);
 }
 
 /* Responsive Design */
