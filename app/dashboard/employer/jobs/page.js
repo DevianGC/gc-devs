@@ -1,67 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Dashboard/DashboardLayout';
 import styles from './jobs.module.css';
 
 export default function EmployerJobs() {
   const [activeTab, setActiveTab] = useState('active');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: 'Senior Software Engineer',
-      department: 'Engineering',
-      type: 'Full-time',
-      location: 'Remote',
-      salary: '$80,000 - $120,000',
-      applicants: 45,
-      status: 'Active',
-      posted: '2023-10-10',
-      deadline: '2023-11-10',
-      description: 'We are looking for a senior software engineer to join our growing team...'
-    },
-    {
-      id: 2,
-      title: 'UX Designer',
-      department: 'Design',
-      type: 'Full-time',
-      location: 'Hybrid',
-      salary: '$60,000 - $85,000',
-      applicants: 32,
-      status: 'Active',
-      posted: '2023-10-08',
-      deadline: '2023-11-08',
-      description: 'Join our design team to create amazing user experiences...'
-    },
-    {
-      id: 3,
-      title: 'Marketing Intern',
-      department: 'Marketing',
-      type: 'Internship',
-      location: 'On-site',
-      salary: '$15/hour',
-      applicants: 28,
-      status: 'Active',
-      posted: '2023-10-05',
-      deadline: '2023-10-25',
-      description: 'Great opportunity for students to gain marketing experience...'
-    },
-    {
-      id: 4,
-      title: 'Data Analyst',
-      department: 'Analytics',
-      type: 'Full-time',
-      location: 'Remote',
-      salary: '$55,000 - $75,000',
-      applicants: 18,
-      status: 'Closed',
-      posted: '2023-09-20',
-      deadline: '2023-10-20',
-      description: 'Analyze data to drive business decisions...'
-    }
-  ]);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -73,6 +21,29 @@ export default function EmployerJobs() {
     description: '',
     requirements: ''
   });
+
+  // Fetch jobs from Firebase on component mount
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('/api/jobs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch jobs');
+      }
+      const data = await response.json();
+      setJobs(data);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const activeJobs = jobs.filter(job => job.status === 'Active');
   const closedJobs = jobs.filter(job => job.status === 'Closed');
@@ -86,35 +57,77 @@ export default function EmployerJobs() {
     }));
   };
 
-  const handleCreateJob = (e) => {
+  const handleCreateJob = async (e) => {
     e.preventDefault();
-    const job = {
-      id: jobs.length + 1,
-      ...newJob,
-      applicants: 0,
-      status: 'Active',
-      posted: new Date().toISOString().split('T')[0]
-    };
-    setJobs(prev => [...prev, job]);
-    setNewJob({
-      title: '',
-      department: '',
-      type: 'Full-time',
-      location: 'Remote',
-      salary: '',
-      deadline: '',
-      description: '',
-      requirements: ''
-    });
-    setShowCreateModal(false);
+    try {
+      const jobData = {
+        ...newJob,
+        applicants: 0,
+        status: 'Active',
+        posted: new Date().toISOString().split('T')[0]
+      };
+
+      const response = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create job');
+      }
+
+      const createdJob = await response.json();
+      setJobs(prev => [...prev, createdJob]);
+      
+      // Reset form
+      setNewJob({
+        title: '',
+        department: '',
+        type: 'Full-time',
+        location: 'Remote',
+        salary: '',
+        deadline: '',
+        description: '',
+        requirements: ''
+      });
+      setShowCreateModal(false);
+      
+      // Show success message (optional)
+      alert('Job posted successfully!');
+    } catch (err) {
+      console.error('Error creating job:', err);
+      alert('Failed to create job. Please try again.');
+    }
   };
 
-  const handleJobAction = (jobId, action) => {
-    setJobs(prev => prev.map(job => 
-      job.id === jobId 
-        ? { ...job, status: action === 'close' ? 'Closed' : action === 'activate' ? 'Active' : job.status }
-        : job
-    ));
+  const handleJobAction = async (jobId, action) => {
+    try {
+      const newStatus = action === 'close' ? 'Closed' : action === 'activate' ? 'Active' : null;
+      if (!newStatus) return;
+
+      const response = await fetch(`/api/jobs/${jobId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update job status');
+      }
+
+      const updatedJob = await response.json();
+      setJobs(prev => prev.map(job => 
+        job.id === jobId ? updatedJob : job
+      ));
+    } catch (err) {
+      console.error('Error updating job status:', err);
+      alert('Failed to update job status. Please try again.');
+    }
   };
 
   const getStatusColor = (status) => {
@@ -252,33 +265,52 @@ export default function EmployerJobs() {
 
         {/* Job Listings */}
         <div className={styles.jobsList}>
-          {activeTab === 'active' && activeJobs.map(renderJobCard)}
-          {activeTab === 'closed' && closedJobs.map(renderJobCard)}
-          {activeTab === 'drafts' && draftJobs.map(renderJobCard)}
-          
-          {((activeTab === 'active' && activeJobs.length === 0) ||
-            (activeTab === 'closed' && closedJobs.length === 0) ||
-            (activeTab === 'drafts' && draftJobs.length === 0)) && (
-            <div className={styles.emptyState}>
-              <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="12" y="20" width="40" height="32" rx="4" stroke="currentColor" strokeWidth="2"/>
-                <rect x="20" y="12" width="24" height="16" rx="4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              <h3>No {activeTab} jobs found</h3>
-              <p>
-                {activeTab === 'active' && "You don't have any active job postings yet."}
-                {activeTab === 'closed' && "No closed job postings."}
-                {activeTab === 'drafts' && "No draft job postings."}
-              </p>
-              {activeTab === 'active' && (
-                <button 
-                  className={styles.createButton}
-                  onClick={() => setShowCreateModal(true)}
-                >
-                  Post Your First Job
-                </button>
-              )}
+          {loading && (
+            <div className={styles.loadingState}>
+              <p>Loading jobs...</p>
             </div>
+          )}
+
+          {error && (
+            <div className={styles.errorState}>
+              <p>Error: {error}</p>
+              <button className={styles.retryButton} onClick={fetchJobs}>
+                Retry
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && (
+            <>
+              {activeTab === 'active' && activeJobs.map(renderJobCard)}
+              {activeTab === 'closed' && closedJobs.map(renderJobCard)}
+              {activeTab === 'drafts' && draftJobs.map(renderJobCard)}
+              
+              {((activeTab === 'active' && activeJobs.length === 0) ||
+                (activeTab === 'closed' && closedJobs.length === 0) ||
+                (activeTab === 'drafts' && draftJobs.length === 0)) && (
+                <div className={styles.emptyState}>
+                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="20" width="40" height="32" rx="4" stroke="currentColor" strokeWidth="2"/>
+                    <rect x="20" y="12" width="24" height="16" rx="4" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  <h3>No {activeTab} jobs found</h3>
+                  <p>
+                    {activeTab === 'active' && "You don't have any active job postings yet."}
+                    {activeTab === 'closed' && "No closed job postings."}
+                    {activeTab === 'drafts' && "No draft job postings."}
+                  </p>
+                  {activeTab === 'active' && (
+                    <button 
+                      className={styles.createButton}
+                      onClick={() => setShowCreateModal(true)}
+                    >
+                      Post Your First Job
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -361,7 +393,7 @@ export default function EmployerJobs() {
                       value={newJob.salary}
                       onChange={handleInputChange}
                       className={styles.formInput}
-                      placeholder="e.g., $50,000 - $70,000"
+                      placeholder="e.g., 20,000 - 30,000"
                     />
                   </div>
                   
