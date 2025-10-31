@@ -12,6 +12,18 @@ export default function EmployerJobs() {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingJob, setEditingJob] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    department: '',
+    type: 'Full-time',
+    location: 'Remote',
+    salary: '',
+    deadline: '',
+    description: '',
+    requirements: ''
+  });
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -164,6 +176,65 @@ export default function EmployerJobs() {
     setJobToDelete(null);
   };
 
+  const handleEditClick = (job) => {
+    setEditingJob(job);
+    setEditFormData({
+      title: job.title || '',
+      department: job.department || '',
+      type: job.type || 'Full-time',
+      location: job.location || 'Remote',
+      salary: job.salary || '',
+      deadline: job.deadline || '',
+      description: job.description || '',
+      requirements: job.requirements || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingJob) return;
+
+    try {
+      const response = await fetch(`/api/jobs/${editingJob.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editFormData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update job');
+      }
+
+      const updatedJob = await response.json();
+      setJobs(prev => prev.map(job => 
+        job.id === editingJob.id ? updatedJob : job
+      ));
+      
+      setShowEditModal(false);
+      setEditingJob(null);
+      alert('Job updated successfully!');
+    } catch (err) {
+      console.error('Error updating job:', err);
+      alert('Failed to update job. Please try again.');
+    }
+  };
+
+  const handleEditCancel = () => {
+    setShowEditModal(false);
+    setEditingJob(null);
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Active':
@@ -199,7 +270,7 @@ export default function EmployerJobs() {
                 <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/>
               </svg>
             </button>
-            <button className={styles.actionButton} title="Edit Job">
+            <button className={styles.actionButton} title="Edit Job" onClick={() => handleEditClick(job)}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.5 2.5L13.5 4.5L5 13H3V11L11.5 2.5Z" stroke="currentColor" strokeWidth="1.5"/>
               </svg>
@@ -370,7 +441,143 @@ export default function EmployerJobs() {
           )}
         </div>
 
-        {/* Delete Confirmation Modal */}
+        {/* Edit Job Modal */}
+        {showEditModal && (
+          <div className={styles.modalOverlay} onClick={handleEditCancel}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Edit Job</h2>
+                <button 
+                  className={styles.modalClose}
+                  onClick={handleEditCancel}
+                >
+                  ×
+                </button>
+              </div>
+              
+              <form onSubmit={handleEditSubmit} className={styles.modalForm}>
+                <div className={styles.formGrid}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Job Title *</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={editFormData.title}
+                      onChange={handleEditInputChange}
+                      className={styles.formInput}
+                      required
+                    />
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Department *</label>
+                    <input
+                      type="text"
+                      name="department"
+                      value={editFormData.department}
+                      onChange={handleEditInputChange}
+                      className={styles.formInput}
+                      required
+                    />
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Job Type *</label>
+                    <select
+                      name="type"
+                      value={editFormData.type}
+                      onChange={handleEditInputChange}
+                      className={styles.formSelect}
+                      required
+                    >
+                      <option value="Full-time">Full-time</option>
+                      <option value="Part-time">Part-time</option>
+                      <option value="Internship">Internship</option>
+                      <option value="Contract">Contract</option>
+                    </select>
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Location *</label>
+                    <select
+                      name="location"
+                      value={editFormData.location}
+                      onChange={handleEditInputChange}
+                      className={styles.formSelect}
+                      required
+                    >
+                      <option value="Remote">Remote</option>
+                      <option value="On-site">On-site</option>
+                      <option value="Hybrid">Hybrid</option>
+                    </select>
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Salary Range</label>
+                    <input
+                      type="text"
+                      name="salary"
+                      value={editFormData.salary}
+                      onChange={handleEditInputChange}
+                      className={styles.formInput}
+                      placeholder="e.g., 20,000 - 30,000"
+                    />
+                  </div>
+                  
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Application Deadline</label>
+                    <input
+                      type="date"
+                      name="deadline"
+                      value={editFormData.deadline}
+                      onChange={handleEditInputChange}
+                      className={styles.formInput}
+                    />
+                  </div>
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Job Description *</label>
+                  <textarea
+                    name="description"
+                    value={editFormData.description}
+                    onChange={handleEditInputChange}
+                    className={styles.formTextarea}
+                    rows="4"
+                    required
+                    placeholder="Describe the role, responsibilities, and what you're looking for..."
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Requirements</label>
+                  <textarea
+                    name="requirements"
+                    value={editFormData.requirements}
+                    onChange={handleEditInputChange}
+                    className={styles.formTextarea}
+                    rows="3"
+                    placeholder="List the required skills, experience, and qualifications..."
+                  />
+                </div>
+                
+                <div className={styles.modalActions}>
+                  <button 
+                    type="button" 
+                    className={styles.cancelButton}
+                    onClick={handleEditCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className={styles.submitButton}>
+                    Update Job
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {showDeleteModal && (
           <div className={styles.modalOverlay} onClick={handleDeleteCancel}>
             <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
