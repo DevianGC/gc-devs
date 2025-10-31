@@ -10,6 +10,8 @@ export default function EmployerJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -130,6 +132,38 @@ export default function EmployerJobs() {
     }
   };
 
+  const handleDeleteClick = (job) => {
+    setJobToDelete(job);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!jobToDelete) return;
+
+    try {
+      const response = await fetch(`/api/jobs/${jobToDelete.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete job');
+      }
+
+      setJobs(prev => prev.filter(job => job.id !== jobToDelete.id));
+      setShowDeleteModal(false);
+      setJobToDelete(null);
+      alert('Job deleted permanently.');
+    } catch (err) {
+      console.error('Error deleting job:', err);
+      alert('Failed to delete job. Please try again.');
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setJobToDelete(null);
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Active':
@@ -180,6 +214,28 @@ export default function EmployerJobs() {
                   <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </button>
+            ) : job.status === 'Closed' ? (
+              <>
+                <button 
+                  className={styles.activateButton} 
+                  title="Reactivate Job"
+                  onClick={() => handleJobAction(job.id, 'activate')}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 4V8L11 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                  </svg>
+                </button>
+                <button 
+                  className={styles.deleteButton} 
+                  title="Delete Permanently"
+                  onClick={() => handleDeleteClick(job)}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 4H13M5 4V3C5 2.44772 5.44772 2 6 2H10C10.5523 2 11 2.44772 11 3V4M6 7V11M10 7V11M4 4H12V13C12 13.5523 11.5523 14 11 14H5C4.44772 14 4 13.5523 4 13V4Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </>
             ) : (
               <button 
                 className={styles.activateButton} 
@@ -313,6 +369,40 @@ export default function EmployerJobs() {
             </>
           )}
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <div className={styles.modalOverlay} onClick={handleDeleteCancel}>
+            <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.confirmHeader}>
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.warningIcon}>
+                  <circle cx="24" cy="24" r="22" stroke="#ef4444" strokeWidth="2"/>
+                  <path d="M24 14V26" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="24" cy="32" r="1.5" fill="#ef4444"/>
+                </svg>
+                <h2 className={styles.confirmTitle}>Delete Job Permanently?</h2>
+                <p className={styles.confirmMessage}>
+                  Are you sure you want to permanently delete <strong>{jobToDelete?.title}</strong>? 
+                  This action cannot be undone and all associated data will be lost.
+                </p>
+              </div>
+              <div className={styles.confirmActions}>
+                <button 
+                  className={styles.confirmCancelButton}
+                  onClick={handleDeleteCancel}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className={styles.confirmDeleteButton}
+                  onClick={handleDeleteConfirm}
+                >
+                  Delete Permanently
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Create Job Modal */}
         {showCreateModal && (
