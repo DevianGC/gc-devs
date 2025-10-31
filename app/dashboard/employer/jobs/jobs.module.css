@@ -181,7 +181,8 @@
 
 .actionButton,
 .closeButton,
-.activateButton {
+.activateButton,
+.deleteButton {
   width: 32px;
   height: 32px;
   border: none;
@@ -219,6 +220,16 @@
 
 .activateButton:hover {
   background: #bbf7d0;
+}
+
+.deleteButton {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.deleteButton:hover {
+  background: #fca5a5;
+  color: #991b1b;
 }
 
 .jobDetails {
@@ -480,6 +491,82 @@
   background: rgb(212, 138, 0);
 }
 
+/* Confirmation Modal Styles */
+.confirmModal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.confirmHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.warningIcon {
+  margin-bottom: 1rem;
+}
+
+.confirmTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 1rem 0;
+}
+
+.confirmMessage {
+  font-size: 0.9375rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.confirmMessage strong {
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.confirmCancelButton {
+  padding: 0.75rem 1.5rem;
+  background: var(--gray-200);
+  color: var(--gray-700);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.confirmCancelButton:hover {
+  background: var(--gray-300);
+}
+
+.confirmDeleteButton {
+  padding: 0.75rem 1.5rem;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.confirmDeleteButton:hover {
+  background: #991b1b;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .jobsContainer {
@@ -533,6 +620,10 @@
     flex-direction: column;
   }
   
+  .confirmActions {
+    flex-direction: column;
+  }
+  
   .pageTitle {
     font-size: 1.5rem;
   }
@@ -564,5 +655,13 @@
     border-radius: 0;
     height: 100vh;
     max-height: none;
+  }
+  
+  .confirmModal {
+    padding: 1.5rem;
+  }
+  
+  .confirmActions {
+    flex-direction: column;
   }
 }
