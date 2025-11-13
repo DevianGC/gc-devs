@@ -90,6 +90,13 @@ export default function DashboardLayout({ children, userType = 'student' }) {
         { href: '/dashboard/employer/communications', label: 'Messages', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M3 7l7 5 7-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> },
         { href: '/dashboard/employer/analytics', label: 'Analytics', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 9H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg> },
       ]
+    : userType === 'alumni'
+    ? [
+        { href: '/dashboard/alumni', label: 'Dashboard', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="2"/></svg> },
+        { href: '/dashboard/alumni/profile', label: 'My Profile', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="2"/><rect x="4" y="13" width="12" height="4" rx="2" stroke="currentColor" strokeWidth="2"/></svg> },
+        { href: '/dashboard/alumni/mentorship-groups', label: 'Mentorship Groups', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5"/><circle cx="14" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5"/><circle cx="10" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5"/><path d="M2 18c0-2 2-3.5 4-3.5s4 1.5 4 3.5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 18c0-2 2-3.5 4-3.5s4 1.5 4 3.5" stroke="currentColor" strokeWidth="1.5"/></svg> },
+        { href: '/dashboard/alumni/help', label: 'Help / Support', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M10 14v-2m0-6a2 2 0 0 1 2 2c0 1-1 2-2 2s-2 1-2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg> },
+      ]
     : [
         { href: '/dashboard/career-office', label: 'Dashboard', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="2"/></svg> },
         { href: '/dashboard/career-office/jobs', label: 'Manage Jobs', icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="7" y="3" width="6" height="4" rx="2" stroke="currentColor" strokeWidth="2"/></svg> },
@@ -111,7 +118,7 @@ export default function DashboardLayout({ children, userType = 'student' }) {
       >
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>
-            {userType === 'career-office' ? 'Career Office' : userType === 'employer' ? 'Employer Portal' : 'User Portal'}
+            {userType === 'career-office' ? 'Career Office' : userType === 'employer' ? 'Employer Portal' : userType === 'alumni' ? 'Alumni Portal' : 'User Portal'}
           </h2>
           {!isMobile && (
             <button
