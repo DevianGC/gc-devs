@@ -58,6 +58,20 @@ export default function AuthLogin() {
       link: '/career-office/login',
       color: '#9b59b6',
       features: ['Manage job postings', 'Organize events', 'Monitor student progress']
+    },
+    {
+      title: 'Faculty Mentor',
+      description: 'Monitor and guide students in their OJT journey',
+      icon: (
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M12 14l-2-2m0 0l2-2m-2 2h8"/>
+        </svg>
+      ),
+      link: '/faculty-mentor/login',
+      color: '#27ae60',
+      features: ['Monitor student OJT status', 'Review student notes', 'Track OJT progress']
     }
   ];
 
