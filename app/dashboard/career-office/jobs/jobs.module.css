@@ -10,11 +10,11 @@
   --dark-color: #343a40;
   --border-color: #dee2e6;
   --card-bg: #ffffff;
-  --body-bg: #f5f7fb;
+  --body-bg: #ffffff;
 }
 
 .jobsContainer {
-  padding: 1.5rem;
+  padding: rem;
   background-color: var(--body-bg);
   min-height: 100vh;
 }
@@ -23,7 +23,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 /* Keep header above the sliding job detail panel */

@@ -197,7 +197,7 @@ export default function EmployerCommunications() {
       <div className={styles.communicationsContainer}>
         <div className={styles.communicationsHeader}>
           <div className={styles.headerContent}>
-            <h1 className={styles.pageTitle}>Communications</h1>
+            <h1 className={styles.pageTitle}>Messages</h1>
             <p className={styles.pageSubtitle}>Manage messages and notifications</p>
           </div>
           <button 

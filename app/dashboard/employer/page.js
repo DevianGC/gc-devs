@@ -210,43 +210,6 @@ export default function EmployerDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Quick Actions */}
-        <div className={styles.quickActions}>
-          <h2 className={styles.sectionTitle}>Quick Actions</h2>
-          <div className={styles.actionGrid}>
-            <button className={styles.actionButton}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 4V16M4 10H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-              Post New Job
-            </button>
-            <button className={styles.actionButton}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                <rect x="4" y="13" width="12" height="4" rx="2" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              Review Applications
-            </button>
-            <button className={styles.actionButton}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="4" width="14" height="14" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2"/>
-                <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2"/>
-                <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              Schedule Interview
-            </button>
-            <button className={styles.actionButton}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="5" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="2"/>
-                <path d="M7 9H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                <path d="M7 13H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-              View Reports
-            </button>
-          </div>
-        </div>
       </div>
     </DashboardLayout>
   );

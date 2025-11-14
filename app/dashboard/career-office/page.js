@@ -184,7 +184,7 @@ export default function CareerOfficeDashboard() {
           <div className={styles.dashboardCard}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>Recent Applications</h2>
-              <a href="/dashboard/career-office/applications" className={styles.cardLink}>View All</a>
+              <a href="/dashboard/career-office/students" className={styles.cardLink}>View All</a>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.applicationsList}>

@@ -13,7 +13,7 @@ export default function EmployerProfile() {
     website: 'https://techcorp.com',
     email: 'hr@techcorp.com',
     phone: '+1 (555) 123-4567',
-    address: '123 Tech Street, Silicon Valley, CA 94000',
+    address: '123 Tech Street, Olongapo City',
     description: 'TechCorp Solutions is a leading technology company specializing in innovative software solutions for businesses worldwide. We pride ourselves on creating cutting-edge products that transform how companies operate.',
     founded: '2015',
     headquarters: 'Silicon Valley, CA',

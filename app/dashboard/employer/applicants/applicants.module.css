@@ -60,6 +60,8 @@
   background: white;
   min-width: 180px;
   transition: border-color 0.2s;
+  background-color: white;
+  color: black;
 }
 
 .filterSelect:focus {
@@ -280,12 +282,12 @@
 }
 
 .viewButton {
-  background: var(--primary-color);
+  background-color: orange;
   color: white;
 }
 
 .viewButton:hover {
-  background: var(--primary-color-dark);
+  background-color: orangered;
 }
 
 .resumeButton {
@@ -314,6 +316,7 @@
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--gray-300);
   border-radius: 6px;
+  color: black;
   font-size: 0.875rem;
   background: white;
   min-width: 160px;

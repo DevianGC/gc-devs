@@ -525,7 +525,7 @@
 .btnPrimary {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: var(--primary-color);
+  background-color: orange;
   color: white;
   border: none;
   border-radius: 8px;
@@ -536,7 +536,7 @@
 }
 
 .btnPrimary:hover {
-  background: var(--primary-color-dark);
+  background: orangered;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
 }

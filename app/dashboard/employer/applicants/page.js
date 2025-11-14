@@ -7,8 +7,6 @@ import styles from './applicants.module.css';
 export default function EmployerApplicants() {
   const [selectedJob, setSelectedJob] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [showApplicantModal, setShowApplicantModal] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState(null);
 
   const [jobs] = useState([
     { id: 1, title: 'Senior Software Engineer' },
@@ -141,10 +139,6 @@ export default function EmployerApplicants() {
     }
   };
 
-  const viewApplicantDetails = (applicant) => {
-    setSelectedApplicant(applicant);
-    setShowApplicantModal(true);
-  };
 
   const renderStars = (rating, applicantId, interactive = false) => {
     return (
@@ -260,20 +254,18 @@ export default function EmployerApplicants() {
               </div>
 
               <div className={styles.applicantActions}>
-                <button 
-                  className={styles.viewButton}
-                  onClick={() => viewApplicantDetails(applicant)}
+                <a 
+                  href={`/api/resumes/${applicant.resume}`} 
+                  download 
+                  className={styles.resumeButton}
                 >
-                  View Details
-                </button>
-                <button className={styles.resumeButton}>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14 9V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     <path d="M8 10L8 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     <path d="M5 5L8 2L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  Resume
-                </button>
+                   Resume
+                </a>
                 
                 <div className={styles.statusActions}>
                   <select
@@ -305,122 +297,6 @@ export default function EmployerApplicants() {
           )}
         </div>
 
-        {/* Applicant Details Modal */}
-        {showApplicantModal && selectedApplicant && (
-          <div className={styles.modalOverlay} onClick={() => setShowApplicantModal(false)}>
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.modalHeader}>
-                <h2 className={styles.modalTitle}>{selectedApplicant.name}</h2>
-                <button 
-                  className={styles.modalClose}
-                  onClick={() => setShowApplicantModal(false)}
-                >
-                  ×
-                </button>
-              </div>
-              
-              <div className={styles.modalContent}>
-                <div className={styles.modalSection}>
-                  <h3 className={styles.sectionTitle}>Application Details</h3>
-                  <div className={styles.modalGrid}>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Position:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.jobTitle}</span>
-                    </div>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Applied:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.appliedDate}</span>
-                    </div>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Status:</span>
-                      <span className={`${styles.modalValue} ${getStatusColor(selectedApplicant.status)}`}>
-                        {selectedApplicant.status}
-                      </span>
-                    </div>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Rating:</span>
-                      {renderStars(selectedApplicant.rating, selectedApplicant.id, true)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.modalSection}>
-                  <h3 className={styles.sectionTitle}>Contact Information</h3>
-                  <div className={styles.modalGrid}>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Email:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.email}</span>
-                    </div>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Phone:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.phone}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.modalSection}>
-                  <h3 className={styles.sectionTitle}>Qualifications</h3>
-                  <div className={styles.modalGrid}>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Experience:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.experience}</span>
-                    </div>
-                    <div className={styles.modalItem}>
-                      <span className={styles.modalLabel}>Education:</span>
-                      <span className={styles.modalValue}>{selectedApplicant.education}</span>
-                    </div>
-                  </div>
-                  
-                  <div className={styles.modalItem}>
-                    <span className={styles.modalLabel}>Skills:</span>
-                    <div className={styles.skillsList}>
-                      {selectedApplicant.skills.map(skill => (
-                        <span key={skill} className={styles.skillTag}>{skill}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.modalSection}>
-                  <h3 className={styles.sectionTitle}>Cover Letter</h3>
-                  <p className={styles.coverLetter}>{selectedApplicant.coverLetter}</p>
-                </div>
-
-                <div className={styles.modalActions}>
-                  <button className={styles.resumeButton}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M14 9V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M8 10L8 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M5 5L8 2L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Download Resume
-                  </button>
-                  <button className={styles.interviewButton}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-                      <path d="M6 1V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M10 1V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M2 7H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                    Schedule Interview
-                  </button>
-                  <select
-                    value={selectedApplicant.status}
-                    onChange={(e) => handleStatusChange(selectedApplicant.id, e.target.value)}
-                    className={styles.statusSelect}
-                  >
-                    <option value="New Application">New Application</option>
-                    <option value="Under Review">Under Review</option>
-                    <option value="Shortlisted">Shortlisted</option>
-                    <option value="Interview Scheduled">Interview Scheduled</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Hired">Hired</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </DashboardLayout>
   );

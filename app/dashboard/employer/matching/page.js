@@ -10,8 +10,6 @@ export default function CandidateMatching() {
   const [jobs, setJobs] = useState([]);
   const [matchedCandidates, setMatchedCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
   const [filterScore, setFilterScore] = useState(0);
 
   useEffect(() => {
@@ -55,23 +53,12 @@ export default function CandidateMatching() {
             <CandidatesGrid 
               candidates={filteredCandidates}
               getScoreColor={getScoreColor}
-              onViewDetails={(c) => { setSelectedCandidate(c); setShowDetailModal(true); }}
-              onShortlist={(id) => console.log('Shortlist:', id)}
-              onContact={(c) => console.log('Contact:', c.email)}
             />
           </>
         )}
         
         {!loading && !selectedJob && <EmptyState />}
         
-        {showDetailModal && selectedCandidate && (
-          <CandidateDetailModal
-            candidate={selectedCandidate}
-            onClose={() => setShowDetailModal(false)}
-            onShortlist={(id) => console.log('Shortlist:', id)}
-            onContact={(c) => console.log('Contact:', c.email)}
-          />
-        )}
       </div>
     </DashboardLayout>
   );
@@ -136,7 +123,7 @@ function FilterBar({ filterScore, setFilterScore, count }) {
   );
 }
 
-function CandidatesGrid({ candidates, getScoreColor, onViewDetails, onShortlist, onContact }) {
+function CandidatesGrid({ candidates, getScoreColor }) {
   return (
     <div className={styles.candidatesGrid}>
       {candidates.map((candidate) => (
@@ -144,16 +131,13 @@ function CandidatesGrid({ candidates, getScoreColor, onViewDetails, onShortlist,
           key={candidate.id}
           candidate={candidate}
           getScoreColor={getScoreColor}
-          onViewDetails={onViewDetails}
-          onShortlist={onShortlist}
-          onContact={onContact}
         />
       ))}
     </div>
   );
 }
 
-function CandidateCard({ candidate, getScoreColor, onViewDetails, onShortlist, onContact }) {
+function CandidateCard({ candidate, getScoreColor }) {
   return (
     <div className={styles.candidateCard}>
       <MatchBadge score={candidate.matchScore} getScoreColor={getScoreColor} />
@@ -162,7 +146,7 @@ function CandidateCard({ candidate, getScoreColor, onViewDetails, onShortlist, o
       <SkillsSection skills={candidate.skills} />
       <StrengthsSection strengths={candidate.keyStrengths} />
       <QuickInfo candidate={candidate} />
-      <CardActions candidate={candidate} onViewDetails={onViewDetails} onShortlist={onShortlist} onContact={onContact} />
+      <CardActions candidate={candidate} />
     </div>
   );
 }
@@ -262,17 +246,22 @@ function QuickInfo({ candidate }) {
   );
 }
 
-function CardActions({ candidate, onViewDetails, onShortlist, onContact }) {
+function CardActions({ candidate }) {
+  const handleDownloadResume = () => {
+    // In a real app, this would trigger a file download
+    console.log('Downloading resume for:', candidate.name);
+    // Example: window.open(candidate.resumeUrl, '_blank');
+  };
+
   return (
     <div className={styles.cardActions}>
-      <button className={styles.btnPrimary} onClick={() => onViewDetails(candidate)}>View Full Profile</button>
-      <button className={styles.btnSecondary} onClick={() => onShortlist(candidate.id)}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" strokeWidth="2"/></svg>
-        Shortlist
-      </button>
-      <button className={styles.btnSecondary} onClick={() => onContact(candidate)}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" strokeWidth="2"/><polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="2"/></svg>
-        Contact
+      <button className={styles.btnPrimary} onClick={handleDownloadResume}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '8px' }}>
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+        Download Resume
       </button>
     </div>
   );

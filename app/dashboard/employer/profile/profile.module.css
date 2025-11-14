@@ -57,7 +57,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: var(--primary-color);
+  background: orange;
   color: white;
   border: none;
   border-radius: 6px;
@@ -67,7 +67,7 @@
 }
 
 .editButton:hover {
-  background: var(--primary-color-dark);
+  background: orangered;
 }
 
 .editActions {
@@ -92,7 +92,7 @@
 
 .saveButton {
   padding: 0.5rem 1rem;
-  background: var(--primary-color);
+  background: orange;
   color: white;
   border: none;
   border-radius: 6px;
@@ -102,7 +102,7 @@
 }
 
 .saveButton:hover {
-  background: var(--primary-color-dark);
+  background: orangered;
 }
 
 .cardContent {
@@ -206,6 +206,7 @@
   font-size: 0.875rem;
   transition: border-color 0.2s, box-shadow 0.2s;
   background: white;
+  color: black;
 }
 
 .formInput:focus,
